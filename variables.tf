@@ -74,7 +74,7 @@ variable "log_stream_name" {
 }
 
 # key pair
-variable "ssh_pubkey_file" {
-  description = "Path to an SSH public key"
-  default     = "~/.ssh/id_rsa.pub"
+variable "ssh_pubkey_url" {
+  description = "URL to an SSH public key"
+  default     = "https://github.com/browniebroke.keys"
 }
