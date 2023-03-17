@@ -63,8 +63,14 @@ variable "app_count" {
 }
 
 # logs
+variable "log_group_name" {
+  default = "/ecs/django-app"
+}
 variable "log_retention_in_days" {
   default = 30
+}
+variable "log_stream_name" {
+  default = "django-app-log-stream"
 }
 
 # key pair

@@ -40,11 +40,11 @@ resource "aws_ecs_task_definition" "app" {
       ],
       environment = [],
       logConfiguration = {
-        logDriver = "awslogs",
+        logDriver = "awslogs"
         options = {
-          awslogs-group         = "/ecs/django-app",
-          awslogs-region        = var.aws_region,
-          awslogs-stream-prefix = "django-app-log-stream"
+          awslogs-group         = var.log_group_name
+          awslogs-region        = var.aws_region
+          awslogs-stream-prefix = var.log_stream_name
         }
       }
     }
