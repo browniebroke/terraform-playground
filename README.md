@@ -1,6 +1,6 @@
 # Terraform Playground
 
-Setting up a Terraform repo containing required components for a Dockerized application in AWS.
+Setting up a Terraform repo containing required components for a Dockerized application in AWS. Following that [tutorial](https://testdriven.io/blog/deploying-django-to-ecs-with-terraform/).
 
 ## Setup
 
