@@ -51,7 +51,7 @@ variable "ecs_cluster_name" {
 variable "amis" {
   description = "Which AMI to spawn."
   default = {
-    us-west-1 = "ami-0bd3976c0dbacc605"
+    eu-west-2 = "ami-0bd3976c0dbacc605"
   }
 }
 variable "instance_type" {

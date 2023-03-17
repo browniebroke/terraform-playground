@@ -13,18 +13,43 @@ resource "aws_launch_configuration" "ecs" {
   user_data                   = "#!/bin/bash\necho ECS_CLUSTER='${var.ecs_cluster_name}-cluster' > /etc/ecs/ecs.config"
 }
 
-data "template_file" "app" {
-  template = file("templates/django_app.json")
-
-  vars = {
-    docker_image_url_django = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/${var.ecr_repo_name}:latest"
-    region                  = var.aws_region
-  }
-}
-
 resource "aws_ecs_task_definition" "app" {
-  family                = "django-app"
-  container_definitions = data.template_file.app.rendered
+  family = "django-app"
+  container_definitions = jsonencode([
+    {
+      name      = "django-app"
+      image     = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/${var.ecr_repo_name}:latest"
+      essential = true
+      cpu       = 10
+      memory    = 512
+      links     = []
+      portMappings = [
+        {
+          containerPort = 8000
+          hostPort      = 0,
+          protocol      = "tcp"
+        }
+      ],
+      command = [
+        "gunicorn",
+        "-w",
+        "3",
+        "-b",
+        ":8000",
+        "hello_django.wsgi:application"
+      ],
+      environment = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = "/ecs/django-app",
+          awslogs-region        = var.aws_region,
+          awslogs-stream-prefix = "django-app-log-stream"
+        }
+      }
+    }
+    ]
+  )
 }
 
 resource "aws_ecs_service" "production" {
