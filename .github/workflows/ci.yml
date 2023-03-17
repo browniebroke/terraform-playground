@@ -39,14 +39,14 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           message: |
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            #### Terraform Initialization ⚙️`${{ steps.init.outcome }}`
+            #### Terraform Plan 📖`${{ steps.plan.outcome }}`
 
             <details><summary>Show Plan</summary>
 
-            \`\`\`\n
+            ```
             ${{ steps.plan.outputs.stdout }}
-            \`\`\`
+            ```
 
             </details>
 
