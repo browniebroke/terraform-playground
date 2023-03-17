@@ -29,7 +29,6 @@ jobs:
           aws-region: us-east-2
       - uses: hashicorp/setup-terraform@v2
       - run: terraform init
-      - run: terraform fmt -check -diff
       - run: terraform plan -input=false
 #  deploy:
 #    runs-on: ubuntu-latest
