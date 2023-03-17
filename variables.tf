@@ -27,8 +27,20 @@ variable "availability_zones" {
   default     = ["eu-west-2a", "eu-west-2b"]
 }
 
+# load balancer
+variable "health_check_path" {
+  description = "Health check path for the default target group"
+  default     = "/ping/"
+}
+
 # ECR
 variable "ecr_repo_name" {
   description = "Name of the ECR repo"
   default     = "browniebroke"
+}
+
+# ECS
+variable "ecs_cluster_name" {
+  description = "Name of the ECS cluster"
+  default     = "production"
 }
