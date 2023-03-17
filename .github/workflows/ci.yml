@@ -29,7 +29,27 @@ jobs:
           aws-region: us-east-2
       - uses: hashicorp/setup-terraform@v2
       - run: terraform init
-      - run: terraform plan -input=false
+        id: init
+      - run: terraform plan -no-color -input=false
+        id: plan
+
+      - name: Comment plan in pull request
+        uses: thollander/actions-comment-pull-request@v2
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          message: |
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`\n
+            ${{ steps.plan.outputs.stdout }}
+            \`\`\`
+
+            </details>
+
 #  deploy:
 #    runs-on: ubuntu-latest
 #    needs: [plan]
