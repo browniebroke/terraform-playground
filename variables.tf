@@ -3,6 +3,10 @@ variable "aws_region" {
   description = "The AWS region to create resources in."
   default     = "eu-west-2"
 }
+variable "aws_account_id" {
+  description = "The AWS account ID."
+  default     = "111579726218"
+}
 
 # Networking
 variable "public_subnet_1_cidr" {
@@ -43,6 +47,19 @@ variable "ecr_repo_name" {
 variable "ecs_cluster_name" {
   description = "Name of the ECS cluster"
   default     = "production"
+}
+variable "amis" {
+  description = "Which AMI to spawn."
+  default = {
+    us-west-1 = "ami-0bd3976c0dbacc605"
+  }
+}
+variable "instance_type" {
+  default = "t2.micro"
+}
+variable "app_count" {
+  description = "Number of Docker containers to run"
+  default     = 2
 }
 
 # logs
