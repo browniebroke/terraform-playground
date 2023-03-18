@@ -14,46 +14,29 @@ resource "aws_launch_configuration" "ecs" {
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family = "django-app"
+  family = "myapp-task"
   container_definitions = jsonencode([
     {
-      name      = "django-app"
-      image     = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/${var.ecr_repo_name}:latest"
+      name  = var.container_name
+      image = "nginx:latest"
+      # image     = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/${var.ecr_repo_name}:latest"
       essential = true
       cpu       = 10
       memory    = 512
       links     = []
       portMappings = [
         {
-          containerPort = 8000
-          hostPort      = 0,
+          containerPort = var.container_port
           protocol      = "tcp"
         }
-      ],
-      command = [
-        "gunicorn",
-        "-w",
-        "3",
-        "-b",
-        ":8000",
-        "hello_django.wsgi:application"
-      ],
-      environment = [],
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          awslogs-group         = var.log_group_name
-          awslogs-region        = var.aws_region
-          awslogs-stream-prefix = var.log_stream_name
-        }
-      }
+      ]
+      essential = true
     }
-    ]
-  )
+  ])
 }
 
 resource "aws_ecs_service" "production" {
-  name            = "${var.ecs_cluster_name}-service"
+  name            = "${var.ecs_cluster_name}-myapp-service"
   cluster         = aws_ecs_cluster.production.id
   task_definition = aws_ecs_task_definition.app.arn
   iam_role        = aws_iam_role.ecs-service-role.arn
@@ -62,7 +45,7 @@ resource "aws_ecs_service" "production" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.default-target-group.arn
-    container_name   = "django-app"
-    container_port   = 8000
+    container_name   = var.container_name
+    container_port   = var.container_port
   }
 }

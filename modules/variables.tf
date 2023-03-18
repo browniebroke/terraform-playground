@@ -40,7 +40,7 @@ variable "health_check_path" {
 # ECR
 variable "ecr_repo_name" {
   description = "Name of the ECR repo"
-  default     = "browniebroke"
+  default     = "myapp"
 }
 
 # ECS
@@ -55,22 +55,31 @@ variable "amis" {
   }
 }
 variable "instance_type" {
-  default = "t2.micro"
+  description = "The instance type to use."
+  default     = "t2.micro"
 }
 variable "app_count" {
-  description = "Number of Docker containers to run"
+  description = "Number of Docker containers to run."
   default     = 2
+}
+variable "container_name" {
+  description = "Name of the container."
+  default     = "myapp-container"
+}
+variable "container_port" {
+  description = "The container port to expose."
+  default     = 80
 }
 
 # logs
 variable "log_group_name" {
-  default = "/ecs/django-app"
+  default = "/ecs/myapp"
 }
 variable "log_retention_in_days" {
   default = 30
 }
 variable "log_stream_name" {
-  default = "django-app-log-stream"
+  default = "myapp-log-stream"
 }
 
 # key pair
