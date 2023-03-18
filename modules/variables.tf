@@ -87,3 +87,17 @@ variable "ssh_pubkey_url" {
   description = "URL to an SSH public key"
   default     = "https://github.com/browniebroke.keys"
 }
+
+# auto scaling
+variable "autoscale_min" {
+  description = "Minimum autoscale (number of EC2)"
+  default     = "1"
+}
+variable "autoscale_max" {
+  description = "Maximum autoscale (number of EC2)"
+  default     = "10"
+}
+variable "autoscale_desired" {
+  description = "Desired autoscale (number of EC2)"
+  default     = "4"
+}
