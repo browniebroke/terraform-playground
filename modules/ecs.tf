@@ -27,10 +27,19 @@ resource "aws_ecs_task_definition" "app" {
       portMappings = [
         {
           containerPort = var.container_port
+          hostPort      = 0,
           protocol      = "tcp"
         }
-      ]
-      essential = true
+      ],
+      environment = [],
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = var.log_group_name
+          awslogs-region        = var.aws_region
+          awslogs-stream-prefix = var.log_stream_name
+        }
+      }
     }
   ])
 }
