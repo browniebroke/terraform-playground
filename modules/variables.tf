@@ -108,7 +108,7 @@ variable "autoscale_desired" {
 # rds
 variable "rds_db_name" {
   description = "RDS database name"
-  default     = "myapp-db"
+  default     = "myapp"
 }
 variable "rds_username" {
   description = "RDS database username"
@@ -119,5 +119,5 @@ variable "rds_password" {
 }
 variable "rds_instance_class" {
   description = "RDS instance type"
-  default     = "db.t2.micro"
+  default     = "db.t3.micro"
 }
