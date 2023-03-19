@@ -14,7 +14,8 @@ resource "aws_launch_configuration" "ecs" {
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family = "myapp-task"
+  family     = "myapp-task"
+  depends_on = [aws_db_instance.production]
   container_definitions = jsonencode([
     {
       name  = var.container_name
@@ -31,7 +32,29 @@ resource "aws_ecs_task_definition" "app" {
           protocol      = "tcp"
         }
       ],
-      environment = [],
+      environment = [
+        {
+          name  = "RDS_DB_NAME"
+          value = var.rds_db_name
+        },
+        {
+          name  = "RDS_USERNAME"
+          value = var.rds_username
+        },
+        {
+          name  = "RDS_PASSWORD"
+          value = var.rds_password
+        },
+        {
+          name  = "RDS_HOSTNAME"
+          value = aws_db_instance.production.address
+        },
+        {
+          name  = "RDS_PORT"
+          value = "5432"
+        },
+
+      ],
       logConfiguration = {
         logDriver = "awslogs"
         options = {
