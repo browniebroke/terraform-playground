@@ -30,7 +30,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
       - run: terraform init
         id: init
-      - run: terraform plan -no-color -input=false
+      - run: terraform plan -no-color -input=false -var 'rds_password=${{ secrets.RDS_PASSWORD }}'
         id: plan
 
       - name: Comment plan in pull request
@@ -62,4 +62,4 @@ jobs:
 #          aws-region: us-east-2
 #      - uses: hashicorp/setup-terraform@v2
 #      - run: terraform init
-#      - run: terraform apply -auto-approve -input=false
+#      - run: terraform apply -auto-approve -input=false  -var 'rds_password=${{ secrets.RDS_PASSWORD }}'
