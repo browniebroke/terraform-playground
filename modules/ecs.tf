@@ -14,8 +14,8 @@ resource "aws_launch_configuration" "ecs" {
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family     = "myapp-task"
-  depends_on = [aws_db_instance.production]
+  family = "myapp-task"
+  # depends_on = [aws_db_instance.production]
   container_definitions = jsonencode([
     {
       name  = var.container_name
@@ -45,10 +45,10 @@ resource "aws_ecs_task_definition" "app" {
           name  = "RDS_PASSWORD"
           value = var.rds_password
         },
-        {
-          name  = "RDS_HOSTNAME"
-          value = aws_db_instance.production.address
-        },
+        # {
+        #   name  = "RDS_HOSTNAME"
+        #   value = aws_db_instance.production.address
+        # },
         {
           name  = "RDS_PORT"
           value = "5432"
