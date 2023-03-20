@@ -1,6 +1,6 @@
 #resource "aws_db_subnet_group" "production" {
 #  name       = "main"
-#  subnet_ids = [aws_subnet.private-subnet-1.id, aws_subnet.private-subnet-2.id]
+#  subnet_ids = [aws_subnet.private_subnet_1.id, aws_subnet.private_subnet_2.id]
 #}
 #
 #resource "aws_db_instance" "production" {

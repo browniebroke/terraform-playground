@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "production" {
-  name = "${var.ecs_cluster_name}-cluster"
+  name = "${var.ecs_cluster_name}_cluster"
 }
 
 resource "aws_ecs_task_definition" "app" {
@@ -67,20 +67,20 @@ resource "aws_ecs_task_definition" "app" {
 }
 
 resource "aws_ecs_service" "production" {
-  name            = "${var.ecs_cluster_name}-myapp-service"
+  name            = "${var.ecs_cluster_name}_myapp_service"
   cluster         = aws_ecs_cluster.production.id
   task_definition = aws_ecs_task_definition.app.arn
   desired_count   = var.app_count
-  depends_on      = [aws_alb_listener.ecs-alb-http-listener, aws_iam_role_policy.ecs-service-role-policy]
+  depends_on      = [aws_alb_listener.ecs_alb_http_listener, aws_iam_role_policy.ecs_service_role_policy]
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = [aws_subnet.private-subnet-1.id, aws_subnet.private-subnet-2.id]
+    subnets         = [aws_subnet.private_subnet_1.id, aws_subnet.private_subnet_2.id]
     security_groups = [aws_security_group.ecs.id]
   }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.default-target-group.arn
+    target_group_arn = aws_alb_target_group.default_target_group.arn
     container_name   = var.container_name
     container_port   = var.container_port
   }
