@@ -17,8 +17,9 @@ resource "aws_ecs_task_definition" "app" {
   family                   = "myapp-task"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 10
+  cpu                      = 256
   memory                   = 512
+  execution_role_arn       = aws_iam_role.ecs_task_role.arn
 
   # depends_on = [aws_db_instance.production]
   container_definitions = jsonencode([
@@ -27,12 +28,10 @@ resource "aws_ecs_task_definition" "app" {
       image = "nginx:latest"
       # image     = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/${var.ecr_repo_name}:latest"
       essential = true
-      cpu       = 10
-      memory    = 512
       portMappings = [
         {
           containerPort = var.container_port
-          hostPort      = 0,
+          hostPort      = var.container_port,
           protocol      = "tcp"
         }
       ],
