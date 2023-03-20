@@ -14,7 +14,12 @@ resource "aws_launch_configuration" "ecs" {
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family = "myapp-task"
+  family                   = "myapp-task"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 10
+  memory                   = 512
+
   # depends_on = [aws_db_instance.production]
   container_definitions = jsonencode([
     {
@@ -24,7 +29,6 @@ resource "aws_ecs_task_definition" "app" {
       essential = true
       cpu       = 10
       memory    = 512
-      links     = []
       portMappings = [
         {
           containerPort = var.container_port
@@ -65,6 +69,11 @@ resource "aws_ecs_task_definition" "app" {
       }
     }
   ])
+
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
 }
 
 resource "aws_ecs_service" "production" {
@@ -74,6 +83,7 @@ resource "aws_ecs_service" "production" {
   iam_role        = aws_iam_role.ecs-service-role.arn
   desired_count   = var.app_count
   depends_on      = [aws_alb_listener.ecs-alb-http-listener, aws_iam_role_policy.ecs-service-role-policy]
+  launch_type     = "FARGATE"
 
   load_balancer {
     target_group_arn = aws_alb_target_group.default-target-group.arn
