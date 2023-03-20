@@ -3,10 +3,10 @@
   "Statement": [
     {
       "Action": "sts:AssumeRole",
+      "Effect": "Allow",
       "Principal": {
-        "Service": ["ecs.amazonaws.com"]
-      },
-      "Effect": "Allow"
+        "Service": "ecs-tasks.amazonaws.com"
+      }
     }
   ]
 }
