@@ -6,9 +6,11 @@ resource "aws_ecs_task_definition" "app" {
   family                   = "myapp-task"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 256
-  memory                   = 512
-  execution_role_arn       = aws_iam_role.ecs_task_role.arn
+  # See this page for allowed values as CPU and memory:
+  # https://docs.aws.amazon.com/AmazonECS/latest/userguide/task_definition_parameters.html#task_size
+  cpu                = 256
+  memory             = 512
+  execution_role_arn = aws_iam_role.ecs_task_role.arn
 
   # depends_on = [aws_db_instance.production]
   container_definitions = jsonencode([
