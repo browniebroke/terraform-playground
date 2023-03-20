@@ -2,19 +2,16 @@ resource "aws_ecs_cluster" "production" {
   name = "${var.ecs_cluster_name}-cluster"
 }
 
-resource "aws_launch_configuration" "ecs" {
-  name                        = "${var.ecs_cluster_name}-cluster"
-  image_id                    = lookup(var.amis, var.aws_region)
-  instance_type               = var.instance_type
-  security_groups             = [aws_security_group.ecs.id]
-  iam_instance_profile        = aws_iam_instance_profile.ecs.name
-  key_name                    = aws_key_pair.production.key_name
-  associate_public_ip_address = true
-  user_data                   = "#!/bin/bash\necho ECS_CLUSTER='${var.ecs_cluster_name}-cluster' > /etc/ecs/ecs.config"
-}
-
 resource "aws_ecs_task_definition" "app" {
-  family = "myapp-task"
+  family                   = "myapp-task"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  # See this page for allowed values as CPU and memory:
+  # https://docs.aws.amazon.com/AmazonECS/latest/userguide/task_definition_parameters.html#task_size
+  cpu                = 256
+  memory             = 512
+  execution_role_arn = aws_iam_role.ecs_task_role.arn
+
   # depends_on = [aws_db_instance.production]
   container_definitions = jsonencode([
     {
@@ -22,13 +19,10 @@ resource "aws_ecs_task_definition" "app" {
       image = "nginx:latest"
       # image     = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/${var.ecr_repo_name}:latest"
       essential = true
-      cpu       = 10
-      memory    = 512
-      links     = []
       portMappings = [
         {
           containerPort = var.container_port
-          hostPort      = 0,
+          hostPort      = var.container_port,
           protocol      = "tcp"
         }
       ],
@@ -65,15 +59,25 @@ resource "aws_ecs_task_definition" "app" {
       }
     }
   ])
+
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
 }
 
 resource "aws_ecs_service" "production" {
   name            = "${var.ecs_cluster_name}-myapp-service"
   cluster         = aws_ecs_cluster.production.id
   task_definition = aws_ecs_task_definition.app.arn
-  iam_role        = aws_iam_role.ecs-service-role.arn
   desired_count   = var.app_count
   depends_on      = [aws_alb_listener.ecs-alb-http-listener, aws_iam_role_policy.ecs-service-role-policy]
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets         = [aws_subnet.private-subnet-1.id, aws_subnet.private-subnet-2.id]
+    security_groups = [aws_security_group.ecs.id]
+  }
 
   load_balancer {
     target_group_arn = aws_alb_target_group.default-target-group.arn

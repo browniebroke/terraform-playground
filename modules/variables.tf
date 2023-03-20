@@ -48,19 +48,6 @@ variable "ecs_cluster_name" {
   description = "Name of the ECS cluster"
   default     = "production"
 }
-variable "amis" {
-  description = "Which AMI to spawn."
-  default = {
-    eu-west-1 = "ami-0557bea45bd2b776b"
-    eu-west-2 = "ami-04018f95156d810bc"
-    eu-west-3 = "ami-09d6d8f3c2066202b"
-    us-east-1 = "ami-083cd4eb32643c8a0"
-  }
-}
-variable "instance_type" {
-  description = "The instance type to use."
-  default     = "t2.micro"
-}
 variable "app_count" {
   description = "Number of Docker containers to run."
   default     = 2
@@ -83,26 +70,6 @@ variable "log_retention_in_days" {
 }
 variable "log_stream_name" {
   default = "myapp-log-stream"
-}
-
-# key pair
-variable "ssh_pubkey_url" {
-  description = "URL to an SSH public key"
-  default     = "https://github.com/browniebroke.keys"
-}
-
-# auto scaling
-variable "autoscale_min" {
-  description = "Minimum autoscale (number of EC2)"
-  default     = "1"
-}
-variable "autoscale_max" {
-  description = "Maximum autoscale (number of EC2)"
-  default     = "10"
-}
-variable "autoscale_desired" {
-  description = "Desired autoscale (number of EC2)"
-  default     = "4"
 }
 
 # rds
