@@ -9,11 +9,10 @@ resource "aws_lb" "production" {
 
 # Target group
 resource "aws_alb_target_group" "default_target_group" {
-  name        = "${var.ecs_cluster_name}-tg"
-  port        = 80
-  protocol    = "HTTP"
-  vpc_id      = aws_vpc.production_vpc.id
-  target_type = "ip"
+  name     = "${var.ecs_cluster_name}-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.production_vpc.id
 
   health_check {
     path                = var.health_check_path
